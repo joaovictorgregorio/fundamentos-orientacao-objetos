@@ -1,54 +1,34 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Payments
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {
             Console.Clear();
 
-            var pagamentoBoleto = new PagamentoViaBoleto();
-            pagamentoBoleto.Vencimento = DateTime.Now;
-            pagamentoBoleto.Pagar();
-            pagamentoBoleto.NumeroBoleto = "1234567";
-
-            var pagamento = new Pagamento();
-            Console.WriteLine(pagamento.ToString());
-
-            var pagamentoCartaoCredito = new PagamentoCartaCredito();
-            pagamentoCartaoCredito.NumeroCartao = "12324343434";
-            pagamentoCartaoCredito.ConfirmarNumeroValidoCartaoCredito();
+            var pessoaUm = new Pessoa(2, "João Victor");
+            var pessoaDois = new Pessoa(2, "João Victor");
+            Console.WriteLine(pessoaUm.Equals(pessoaDois));
         }
     }
 
-    class Pagamento
+    public class Pessoa : IEquatable<Pessoa>
     {
-        // Propriedades
-        public DateTime Vencimento;
+        public Pessoa(int id, string nome)
+        {
+            Id = id;
+            Nome = nome;
+        }
 
-        // Métodos
-        public virtual void Pagar()
-            => Console.WriteLine("Hello, world!");
+        public int Id { get; set; }
+        public string Nome { get; set; }
 
-        public override string ToString()
-            => Vencimento.ToString("dd/MM/yyyy");
-        
+        public bool Equals(Pessoa pessoa)
+        {
+            return Id == pessoa.Id && Nome == pessoa.Nome;
+        }
     }
-
-    class PagamentoViaBoleto : Pagamento
-    {
-        public string NumeroBoleto;
-        public override void Pagar()
-            => Console.WriteLine("Pagou o boleto!");
-        
-    }
-
-    class PagamentoCartaCredito : Pagamento
-    {
-        public string NumeroCartao;
-        public void ConfirmarNumeroValidoCartaoCredito()
-            => Console.WriteLine($"{NumeroCartao}, foi válidado com sucesso!");
-    }
-    
 }
