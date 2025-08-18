@@ -5,30 +5,21 @@ namespace Payments
 {
     public class Program
     {
+        static void RealizarPagamento(double valor)
+        {
+            Console.WriteLine($"Pago o valor de {valor}");
+        }
         static void Main(string[] args)
         {
             Console.Clear();
 
-            var pessoaUm = new Pessoa(2, "João Victor");
-            var pessoaDois = new Pessoa(2, "João Victor");
-            Console.WriteLine(pessoaUm.Equals(pessoaDois));
+            var pagar = new Pagamento.Pagar(RealizarPagamento);
+            pagar(25);
         }
     }
 
-    public class Pessoa : IEquatable<Pessoa>
-    {
-        public Pessoa(int id, string nome)
+    public class Pagamento
         {
-            Id = id;
-            Nome = nome;
+            public delegate void Pagar(double valor);
         }
-
-        public int Id { get; set; }
-        public string Nome { get; set; }
-
-        public bool Equals(Pessoa pessoa)
-        {
-            return Id == pessoa.Id && Nome == pessoa.Nome;
-        }
-    }
 }
