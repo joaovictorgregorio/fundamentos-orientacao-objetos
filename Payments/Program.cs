@@ -5,21 +5,53 @@ namespace Payments
 {
     public class Program
     {
-        static void RealizarPagamento(double valor)
-        {
-            Console.WriteLine($"Pago o valor de {valor}");
-        }
         static void Main(string[] args)
         {
             Console.Clear();
 
-            var pagar = new Pagamento.Pagar(RealizarPagamento);
-            pagar(25);
+            var room = new Room(3);
+            room.RoomSoldOutEvent += OnRoomSoldOut;
+            room.ReserveSeat();
+            room.ReserveSeat();
+            room.ReserveSeat();
+            room.ReserveSeat();
+            room.ReserveSeat();
+        }
+
+        static void OnRoomSoldOut(object sender, EventArgs e)
+        {
+            System.Console.WriteLine("Sala lotada!");
         }
     }
 
-    public class Pagamento
+    public class Room
+    {
+        public Room(int seats)
         {
-            public delegate void Pagar(double valor);
+            Seats = seats;
+            SeatsInUse = 0;
         }
+        private int SeatsInUse = 0;
+        public int Seats { get; set; }
+        public void ReserveSeat()
+        {
+            SeatsInUse++;
+            if (SeatsInUse == Seats)
+            {
+                OnRoomSoldOut(EventArgs.Empty);
+            }
+            else
+            {
+                Console.WriteLine("Assento reservado!");
+            }
+        }
+
+        public event EventHandler RoomSoldOutEvent;
+
+        protected virtual void OnRoomSoldOut(EventArgs e)
+        {
+            EventHandler handler = RoomSoldOutEvent;
+            handler?.Invoke(this, e);
+        }
+    }
 }
