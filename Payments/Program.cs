@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace Payments
 {
@@ -9,37 +11,30 @@ namespace Payments
         {
             Console.Clear();
 
-            var genericContext = new DataContext<IPerson, Payment, Subscription>();
-            genericContext.Save(new Payment());
-            genericContext.Save(new Person());
-            genericContext.Save(new Subscription());
+            IList<Payment> payments = new List<Payment>();
+            payments.Add(new Payment(1));
+            payments.Add(new Payment(2));
+            payments.Add(new Payment(3));
+            payments.Add(new Payment(10));
+            payments.Add(new Payment(13));
 
+            payments.Remove(payments[3]);
+
+            foreach (var item in payments)
+            {
+                Console.WriteLine(item.Id);
+            }
+
+            var payment = payments.Where(x => x.Id == 2);
+            Console.WriteLine("\nStatus - " + (payment.Any() ? "pagamento encontrado: " + payment.First().Id.ToString() : "Nenhum pagamento encontrado"));
         }
-
-        public class DataContext<P, PA, S>
-            where P : IPerson
-            where PA : Payment
-            where S : Subscription
+        public class Payment
         {
-            public void Save(P entity)
+            public int Id { get; set; }
+            public Payment(int id)
             {
-                Console.WriteLine($"Saving {entity.GetType().Name}");
-            }
-
-            public void Save(PA entity)
-            {
-                Console.WriteLine($"Saving {entity.GetType().Name}");
-            }
-
-            public void Save(S entity)
-            {
-                Console.WriteLine($"Saving {entity.GetType().Name}");
+                Id = id;
             }
         }
-
-        public interface IPerson { }
-        public class Payment { }
-        public class Person : IPerson { }
-        public class Subscription { }
     }
 }
